@@ -1,59 +1,127 @@
-# FrontendRPMigracion
+# Frontend RP Migración - eCommerce
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.19.
+Aplicación de eCommerce moderna construida con **Angular 21**, utilizando las últimas prácticas de desarrollo con **Signals**, **Standalone Components** y **Change Detection OnPush**.
 
-## Development server
+## 🚀 Estado del Proyecto
 
-To start a local development server, run:
+✅ **Setup inicial completado**
+- Configuración de Angular 21 con mejores prácticas
+- Integración de PrimeNG + Tailwind CSS
+- Sistema de state management con Signals
+- API cliente centralizado
 
-```bash
-ng serve
+## 💻 Tecnologías
+
+- **Framework**: Angular 21
+- **UI Components**: PrimeNG
+- **Styling**: Tailwind CSS
+- **State Management**: Signals + Computed
+- **HTTP**: RxJS Observable + ApiService
+- **Testing**: Vitest
+
+## 📦 Estructura del Proyecto
+
+```
+src/
+├── app/
+│   ├── core/              # Lógica central y compartida
+│   │   ├── models/        # Tipos e interfaces (Category, Product)
+│   │   ├── pages/         # Layouts y páginas base
+│   │   ├── services/      # ApiService, ThemeService, ProductService
+│   │   └── routes/        # Rutas del core
+│   ├── features/          # Módulos de características
+│   │   ├── view-all-products/   # Listado de productos
+│   │   └── view-product/        # Detalle de producto
+│   ├── app.config.ts      # Configuración global
+│   ├── app.routes.ts      # Definición de rutas
+│   └── app.ts             # Componente raíz
+├── environments/          # Configuraciones por ambiente
+└── styles.css             # Estilos globales
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 🎯 Características Implementadas
 
-## Code scaffolding
+### ✅ Gestión de Productos
+- **Listado**: Visualización de todos los productos con filtros
+- **Detalle**: Página individual de cada producto
+- **API Integration**: Conectado con Fake Store API
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### 🏪 Carrito de Compras
+- Almacenamiento persistente con localStorage
+- State management con Signals
+- Gestión de cantidad de productos
 
-```bash
-ng generate component component-name
-```
+### 🎨 Interfaz de Usuario
+- Layout responsive con Tailwind CSS
+- Componentes de PrimeNG
+- Tema personalizable (ThemeService)
+- Navegación fluida
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 🛠️ Guías de Desarrollo
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### Iniciar servidor de desarrollo
 
 ```bash
-ng test
+npm start
 ```
 
-## Running end-to-end tests
+Navega a `http://localhost:4200/`. La aplicación se recargará automáticamente cuando hagas cambios.
 
-For end-to-end (e2e) testing, run:
+### Ejecutar tests
 
 ```bash
-ng e2e
+npm test
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### Build para producción
 
-## Additional Resources
+```bash
+npm run build
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Los artefactos se guardarán en el directorio `dist/`.
+
+## 🏗️ Arquitectura
+
+### Patrones Aplicados
+
+- **SOLID Principles**: Single Responsibility en servicios y componentes
+- **Standalone Components**: Sin NgModules innecesarios
+- **OnPush Change Detection**: Óptimo rendimiento
+- **Signals**: Estado local reactivo y computed properties
+- **Singleton Services**: `providedIn: 'root'` para inyección global
+
+### Servicios Clave
+
+**ApiService** (core/services)
+- Cliente HTTP centralizado y genérico
+- Gestión de headers y errores
+
+**ProductService** (features/products)
+- Lógica de negocio de productos
+- Caché de datos
+
+**CartStore** (features/cart)
+- State management del carrito
+- Persistencia con localStorage
+
+## 🔗 API Backend
+
+- **Proveedor**: Fake Store API
+- **Base URL**: `https://api.escuelajs.co/api/v1`
+- **Endpoints**: `/products`, `/categories`, etc.
+
+## 📚 Documentación Adicional
+
+Consulta los siguientes archivos para más información:
+- `ESTADO.md` - Estado actual del proyecto y checklist
+- `COMO_AGREGAR_FEATURES.md` - Guía para agregar nuevas características
+- `INICIO.md` - Guía rápida para nuevos desarrolladores
+
+## 📖 Recursos
+
+- [Angular 21 Documentation](https://angular.dev)
+- [Angular CLI Reference](https://angular.dev/tools/cli)
+- [PrimeNG Components](https://primeng.org)
+- [Tailwind CSS](https://tailwindcss.com)
+- [Signals RFC](https://angular.dev/guide/signals)
