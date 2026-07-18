@@ -1,0 +1,28 @@
+<p-card styleClass="group relative h-full flex flex-col overflow-hidden transition-all duration-500 ease-out border-none shadow-[0_30px_110px_-15px_rgba(0,0,0,0.45)] hover:shadow-[0_60px_150px_-20px_rgba(0,0,0,0.6)] hover:-translate-y-5">
+  
+  <!-- HEADER de PrimeNG para la imagen superior -->
+  <ng-template pTemplate="header">
+    <img 
+      [src]="product().images[0]" 
+      [alt]="product().title" 
+      class="aspect-square w-full object-cover transition-opacity duration-300 group-hover:opacity-80 lg:aspect-auto lg:h-80" 
+    />
+  </ng-template>
+
+  <!-- CONTENIDO INTERNO -->
+  <div class="flex justify-between items-start mt-2 p-2">
+    
+    <div class="flex flex-col">
+      <h3 class="text-lg font-semibold m-0">
+        <a [routerLink]="['/productos', product().slug]" class="text-inherit no-underline">
+          <span aria-hidden="true" class="absolute inset-0"></span>
+          {{ product().title }}
+        </a>
+      </h3>
+      <span class="text-sm opacity-70 mt-1">{{ product().category.name }}</span>
+    </div>
+    
+    <span class="text-lg font-bold">{{ product().price | currency }}</span>
+    
+  </div>
+</p-card>
