@@ -4,7 +4,8 @@ import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
-import { CategoryResponse, ItemSortBy, ItemSummaryResponse } from '../models/catalog.models';
+import { BrandAutocompleteComponent } from '../../../shared/components/brand-autocomplete/brand-autocomplete.component';
+import { BrandResponse, CategoryResponse, ItemSummaryResponse, SortBy } from '../models/catalog.models';
 import { CategoryService } from '../services/category.service';
 import { ItemService } from '../services/item.service';
 
@@ -12,7 +13,14 @@ const PAGE_SIZE = 20;
 
 @Component({
   selector: 'app-item-list',
-  imports: [ReactiveFormsModule, RouterLink, CardModule, ButtonModule, InputTextModule],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    CardModule,
+    ButtonModule,
+    InputTextModule,
+    BrandAutocompleteComponent,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <h2 class="mb-6 text-2xl font-semibold text-slate-800">Catálogo</h2>
@@ -22,6 +30,30 @@ const PAGE_SIZE = 20;
       (ngSubmit)="search()"
       class="mb-6 flex flex-wrap items-end gap-4 rounded-lg bg-white p-4 shadow-sm"
     >
+      <label class="flex grow flex-col gap-1 text-sm font-medium text-slate-700">
+        Buscar
+        <input pInputText type="text" formControlName="q" placeholder="Título, marca, tienda..." />
+      </label>
+      <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
+        Subcategoría
+        <select
+          formControlName="subcategoryId"
+          class="rounded-md border border-slate-300 px-3 py-2 text-sm"
+        >
+          <option value="">Todas</option>
+          @for (category of categories(); track category.id) {
+            <optgroup [label]="category.name">
+              @for (sub of category.subcategories; track sub.id) {
+                <option [value]="sub.id">{{ sub.name }}</option>
+              }
+            </optgroup>
+          }
+        </select>
+      </label>
+      <label class="flex flex-col gap-1 text-sm font-medium text-slate-700" for="brand-filter">
+        Marca
+        <app-brand-autocomplete [(value)]="brand" inputId="brand-filter" placeholder="Todas" />
+      </label>
       <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
         Precio mín.
         <input pInputText type="number" formControlName="priceMin" class="w-28" />
@@ -29,18 +61,6 @@ const PAGE_SIZE = 20;
       <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
         Precio máx.
         <input pInputText type="number" formControlName="priceMax" class="w-28" />
-      </label>
-      <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
-        Categoría
-        <select
-          formControlName="categorySlug"
-          class="rounded-md border border-slate-300 px-3 py-2 text-sm"
-        >
-          <option value="">Todas</option>
-          @for (category of categories(); track category.id) {
-            <option [value]="category.slug">{{ category.name }}</option>
-          }
-        </select>
       </label>
       <label class="flex flex-col gap-1 text-sm font-medium text-slate-700">
         Orden
@@ -66,10 +86,23 @@ const PAGE_SIZE = 20;
             }
           </ng-template>
           <h3 class="mb-1 font-semibold text-slate-800">{{ item.title }}</h3>
-          <p class="mb-1 text-sm text-slate-500">{{ item.category.name }}</p>
-          <p class="mb-4 font-medium text-slate-800">{{ item.price }}</p>
+          <p class="mb-1 text-sm text-slate-500">
+            {{ item.subcategory.name }}
+            @if (item.brand) {
+              · {{ item.brand.name }}
+            }
+          </p>
+          <p class="mb-4 font-medium text-slate-800">
+            @if (item.type === 'SERVICE') {
+              Desde {{ item.price }}
+            } @else {
+              {{ item.price }}
+            }
+          </p>
           <a [routerLink]="['/items', item.slug]" pButton label="Ver" styleClass="w-full"></a>
         </p-card>
+      } @empty {
+        <p class="text-slate-600 md:col-span-3">Sin resultados.</p>
       }
     </div>
 
@@ -97,15 +130,17 @@ export class ItemListComponent implements OnInit {
 
   categories = signal<CategoryResponse[]>([]);
   items = signal<ItemSummaryResponse[]>([]);
+  brand = signal<BrandResponse | string | null>(null);
   page = signal(0);
   totalPages = signal(0);
   isLastPage = signal(true);
 
   filters = this.fb.nonNullable.group({
+    q: [''],
+    subcategoryId: [''],
     priceMin: [null as number | null],
     priceMax: [null as number | null],
-    categorySlug: [''],
-    sortBy: ['recent' as ItemSortBy],
+    sortBy: ['recent' as SortBy],
   });
 
   ngOnInit() {
@@ -124,12 +159,15 @@ export class ItemListComponent implements OnInit {
   }
 
   private loadItems() {
-    const { priceMin, priceMax, categorySlug, sortBy } = this.filters.getRawValue();
+    const { q, subcategoryId, priceMin, priceMax, sortBy } = this.filters.getRawValue();
+    const brand = this.brand();
     this.itemService
       .searchItems({
+        q: q || undefined,
+        subcategoryId: subcategoryId || undefined,
+        brandId: typeof brand === 'object' && brand ? brand.id : undefined,
         priceMin: priceMin ?? undefined,
         priceMax: priceMax ?? undefined,
-        categorySlug: categorySlug || undefined,
         sortBy,
         page: this.page(),
         size: PAGE_SIZE,

@@ -1,19 +1,20 @@
+import { DurationUnit, ItemType, ServiceMode } from '../../storefront/models/catalog.models';
+
 export interface ItemCreateRequest {
   title: string;
-  slug: string;
   description?: string;
+  type: ItemType;
   price: number;
-  stock: number;
-  categoryId: string;
+  stock?: number;
+  sku?: string;
+  model?: string;
+  brandName?: string;
+  subcategoryId: string;
+  durationValue?: number;
+  durationUnit?: DurationUnit;
+  serviceMode?: ServiceMode;
+  coverageZone?: string;
   images?: string[];
 }
 
-export interface ItemUpdateRequest {
-  title: string;
-  slug: string;
-  description?: string;
-  price: number;
-  stock: number;
-  categoryId: string;
-  images?: string[];
-}
+export type ItemUpdateRequest = ItemCreateRequest;

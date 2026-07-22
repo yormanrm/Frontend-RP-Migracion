@@ -3,11 +3,13 @@ import { inject, Injectable } from '@angular/core';
 import { map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/api-response.model';
+import { Address } from '../../../core/models/common.models';
 import {
   AssociateProfileResponse,
   AssociateProfileUpdateRequest,
   CustomerProfileResponse,
   CustomerProfileUpdateRequest,
+  UserAddressResponse,
 } from '../models/profile.models';
 
 @Injectable({
@@ -38,6 +40,45 @@ export class ProfileService {
       .put<ApiResponse<AssociateProfileResponse>>(
         `${environment.baseApiURL}/profile/me/associate`,
         request,
+      )
+      .pipe(map((res) => res.data));
+  }
+
+  getAddresses() {
+    return this.http
+      .get<ApiResponse<UserAddressResponse[]>>(`${environment.baseApiURL}/profile/me/addresses`)
+      .pipe(map((res) => res.data));
+  }
+
+  createAddress(request: Address) {
+    return this.http
+      .post<ApiResponse<UserAddressResponse>>(
+        `${environment.baseApiURL}/profile/me/addresses`,
+        request,
+      )
+      .pipe(map((res) => res.data));
+  }
+
+  updateAddress(addressId: string, request: Address) {
+    return this.http
+      .put<ApiResponse<UserAddressResponse>>(
+        `${environment.baseApiURL}/profile/me/addresses/${addressId}`,
+        request,
+      )
+      .pipe(map((res) => res.data));
+  }
+
+  deleteAddress(addressId: string) {
+    return this.http
+      .delete<ApiResponse<null>>(`${environment.baseApiURL}/profile/me/addresses/${addressId}`)
+      .pipe(map((res) => res.data));
+  }
+
+  setDefaultAddress(addressId: string) {
+    return this.http
+      .put<ApiResponse<UserAddressResponse>>(
+        `${environment.baseApiURL}/profile/me/addresses/${addressId}/default`,
+        null,
       )
       .pipe(map((res) => res.data));
   }

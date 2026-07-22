@@ -38,12 +38,20 @@ import { AuthService } from '../../../core/services/auth.service';
           <input pInputText id="storeName" type="text" formControlName="storeName" />
         </div>
         <div class="flex flex-col gap-1">
-          <label for="storeSlug" class="text-sm font-medium text-slate-700">Slug de la tienda</label>
-          <input pInputText id="storeSlug" type="text" formControlName="storeSlug" />
-        </div>
-        <div class="flex flex-col gap-1">
-          <label for="taxId" class="text-sm font-medium text-slate-700">Tax ID</label>
-          <input pInputText id="taxId" type="text" formControlName="taxId" />
+          <label for="rfc" class="text-sm font-medium text-slate-700">RFC</label>
+          <input
+            pInputText
+            id="rfc"
+            type="text"
+            formControlName="rfc"
+            class="uppercase"
+            aria-describedby="rfc-error"
+          />
+          @if (form.controls.rfc.invalid && form.controls.rfc.touched) {
+            <p id="rfc-error" class="text-sm text-red-600">
+              RFC inválido (12 o 13 caracteres, ej. GOML850101AB1).
+            </p>
+          }
         </div>
         @if (errorMessage()) {
           <p class="text-sm text-red-600">{{ errorMessage() }}</p>
@@ -62,20 +70,20 @@ export class RegisterAssociateComponent {
 
   form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required],
+    password: ['', [Validators.required, Validators.minLength(8)]],
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
     phone: [''],
     storeName: ['', Validators.required],
-    storeSlug: ['', Validators.required],
-    taxId: [''],
+    rfc: ['', [Validators.required, Validators.pattern(/^([A-ZÑ&]{3,4})\d{6}([A-Z\d]{3})$/i)]],
   });
 
   submit() {
     if (this.form.invalid) return;
-    this.authService.registerAssociate(this.form.getRawValue()).subscribe({
+    const value = this.form.getRawValue();
+    this.authService.registerAssociate({ ...value, rfc: value.rfc.toUpperCase() }).subscribe({
       next: () => this.router.navigateByUrl('/'),
-      error: (err) => this.errorMessage.set(err.error?.message ?? 'Error al registrarse'),
+      error: (err) => this.errorMessage.set(err.error?.detail ?? 'Error al registrarse'),
     });
   }
 }

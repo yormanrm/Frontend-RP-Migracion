@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
+import { adminGuard } from './core/guards/admin.guard';
 import { associateGuard } from './core/guards/associate.guard';
 import { authGuard } from './core/guards/auth.guard';
 
-// Fase 8 agregará navbar e integración final.
 export const routes: Routes = [
   {
     path: '',
@@ -63,12 +63,57 @@ export const routes: Routes = [
       import('./features/profile/profile.component').then((c) => c.ProfileComponent),
   },
   {
+    path: 'associate/items',
+    title: 'Mi inventario',
+    canActivate: [associateGuard],
+    loadComponent: () =>
+      import('./features/associate-dashboard/inventory-list/inventory-list.component').then(
+        (c) => c.InventoryListComponent,
+      ),
+  },
+  {
     path: 'associate/items/new',
-    title: 'Nuevo producto',
+    title: 'Nueva publicación',
     canActivate: [associateGuard],
     loadComponent: () =>
       import('./features/associate-dashboard/inventory-form/inventory-form.component').then(
         (c) => c.InventoryFormComponent,
+      ),
+  },
+  {
+    path: 'associate/items/:id/edit',
+    title: 'Editar publicación',
+    canActivate: [associateGuard],
+    loadComponent: () =>
+      import('./features/associate-dashboard/inventory-form/inventory-form.component').then(
+        (c) => c.InventoryFormComponent,
+      ),
+  },
+  {
+    path: 'associate/orders',
+    title: 'Órdenes recibidas',
+    canActivate: [associateGuard],
+    loadComponent: () =>
+      import('./features/associate-dashboard/associate-orders/associate-orders.component').then(
+        (c) => c.AssociateOrdersComponent,
+      ),
+  },
+  {
+    path: 'associate/sales-report',
+    title: 'Reporte de ventas',
+    canActivate: [associateGuard],
+    loadComponent: () =>
+      import('./features/associate-dashboard/sales-report/sales-report.component').then(
+        (c) => c.SalesReportComponent,
+      ),
+  },
+  {
+    path: 'admin',
+    title: 'Panel de administración',
+    canActivate: [adminGuard],
+    loadComponent: () =>
+      import('./features/admin/admin-panel/admin-panel.component').then(
+        (c) => c.AdminPanelComponent,
       ),
   },
   {

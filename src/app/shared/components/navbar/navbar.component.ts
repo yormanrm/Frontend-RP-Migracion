@@ -26,9 +26,24 @@ import { AuthService } from '../../../core/services/auth.service';
             >
             @if (user.role === 'ASSOCIATE') {
               <a
-                routerLink="/associate/items/new"
+                routerLink="/associate/items"
                 class="text-slate-600 no-underline hover:text-blue-600"
-                >Nuevo producto</a
+                >Mi inventario</a
+              >
+              <a
+                routerLink="/associate/orders"
+                class="text-slate-600 no-underline hover:text-blue-600"
+                >Órdenes recibidas</a
+              >
+              <a
+                routerLink="/associate/sales-report"
+                class="text-slate-600 no-underline hover:text-blue-600"
+                >Reporte de ventas</a
+              >
+            }
+            @if (user.role === 'ADMIN') {
+              <a routerLink="/admin" class="text-slate-600 no-underline hover:text-blue-600"
+                >Panel admin</a
               >
             }
             <p-button label="Cerrar sesión" severity="secondary" size="small" (onClick)="logout()" />

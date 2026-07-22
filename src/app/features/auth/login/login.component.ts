@@ -45,7 +45,7 @@ export class LoginComponent {
     if (this.form.invalid) return;
     this.authService.login(this.form.getRawValue()).subscribe({
       next: () => this.router.navigateByUrl('/'),
-      error: (err) => this.errorMessage.set(err.error?.message ?? 'Error al iniciar sesión'),
+      error: (err) => this.errorMessage.set(err.error?.detail ?? 'Error al iniciar sesión'),
     });
   }
 }

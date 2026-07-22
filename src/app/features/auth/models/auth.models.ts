@@ -1,4 +1,4 @@
-export type Role = 'CUSTOMER' | 'ASSOCIATE';
+export type Role = 'CUSTOMER' | 'ASSOCIATE' | 'ADMIN';
 
 export interface RegisterCustomerRequest {
   email: string;
@@ -15,8 +15,7 @@ export interface RegisterAssociateRequest {
   lastName: string;
   phone?: string;
   storeName: string;
-  storeSlug: string;
-  taxId?: string;
+  rfc: string;
 }
 
 export interface LoginRequest {

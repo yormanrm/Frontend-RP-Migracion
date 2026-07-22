@@ -60,7 +60,7 @@ export class RegisterCustomerComponent {
     if (this.form.invalid) return;
     this.authService.registerCustomer(this.form.getRawValue()).subscribe({
       next: () => this.router.navigateByUrl('/'),
-      error: (err) => this.errorMessage.set(err.error?.message ?? 'Error al registrarse'),
+      error: (err) => this.errorMessage.set(err.error?.detail ?? 'Error al registrarse'),
     });
   }
 }

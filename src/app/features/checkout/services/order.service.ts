@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { map } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../core/models/api-response.model';
-import { OrderResponse } from '../models/order.models';
+import { CheckoutRequest, OrderResponse } from '../models/order.models';
 
 @Injectable({
   providedIn: 'root',
@@ -11,9 +11,9 @@ import { OrderResponse } from '../models/order.models';
 export class OrderService {
   private http = inject(HttpClient);
 
-  checkout() {
+  checkout(request: CheckoutRequest = {}) {
     return this.http
-      .post<ApiResponse<OrderResponse>>(`${environment.baseApiURL}/checkout`, {})
+      .post<ApiResponse<OrderResponse>>(`${environment.baseApiURL}/checkout`, request)
       .pipe(map((res) => res.data));
   }
 

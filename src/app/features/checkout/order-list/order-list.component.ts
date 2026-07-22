@@ -1,13 +1,14 @@
+import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
-import { OrderResponse } from '../models/order.models';
+import { AGGREGATE_STATUS_LABELS, OrderResponse } from '../models/order.models';
 import { OrderService } from '../services/order.service';
 
 @Component({
   selector: 'app-order-list',
-  imports: [RouterLink, TableModule, ButtonModule],
+  imports: [DatePipe, RouterLink, TableModule, ButtonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <h2 class="mb-6 text-2xl font-semibold text-slate-800">Mis órdenes</h2>
@@ -18,16 +19,18 @@ import { OrderService } from '../services/order.service';
         <p-table [value]="orders">
           <ng-template #header>
             <tr>
-              <th>Orden</th>
+              <th>Fecha</th>
               <th>Estado</th>
+              <th>Tiendas</th>
               <th>Total</th>
               <th></th>
             </tr>
           </ng-template>
           <ng-template #body let-order>
             <tr>
-              <td>{{ order.id }}</td>
-              <td>{{ order.status }}</td>
+              <td>{{ order.createdAt | date: 'short' }}</td>
+              <td>{{ statusLabel(order) }}</td>
+              <td>{{ order.subOrders.length }}</td>
               <td>{{ order.total }}</td>
               <td>
                 <a [routerLink]="['/orders', order.id]" pButton label="Ver" severity="secondary"></a>
@@ -45,6 +48,10 @@ export class OrderListComponent implements OnInit {
   private orderService = inject(OrderService);
 
   orders = signal<OrderResponse[] | null>(null);
+
+  statusLabel(order: OrderResponse) {
+    return AGGREGATE_STATUS_LABELS[order.aggregateStatus];
+  }
 
   ngOnInit() {
     this.orderService.getOrders().subscribe((data) => this.orders.set(data));

@@ -8,7 +8,7 @@ export interface CartLineResponse {
 }
 
 export interface CartResponse {
-  id: string;
+  id: string | null;
   items: CartLineResponse[];
   total: number;
 }

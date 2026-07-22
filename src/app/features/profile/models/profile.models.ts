@@ -1,25 +1,17 @@
+import { Address } from '../../../core/models/common.models';
+
 export interface CustomerProfileResponse {
   id: string;
   email: string;
   firstName: string;
   lastName: string;
   phone: string | null;
-  street: string | null;
-  city: string | null;
-  state: string | null;
-  postalCode: string | null;
-  country: string | null;
 }
 
 export interface CustomerProfileUpdateRequest {
   firstName: string;
   lastName: string;
   phone?: string;
-  street?: string;
-  city?: string;
-  state?: string;
-  postalCode?: string;
-  country?: string;
 }
 
 export interface AssociateProfileResponse {
@@ -30,7 +22,8 @@ export interface AssociateProfileResponse {
   phone: string | null;
   storeName: string;
   storeSlug: string;
-  taxId: string | null;
+  rfc: string;
+  storeAddress: Address | null;
   publicBio: string | null;
   publicContactEmail: string | null;
   publicContactPhone: string | null;
@@ -41,8 +34,13 @@ export interface AssociateProfileUpdateRequest {
   lastName: string;
   phone?: string;
   storeName: string;
-  taxId?: string;
+  storeAddress?: Address;
   publicBio?: string;
   publicContactEmail?: string;
   publicContactPhone?: string;
+}
+
+export interface UserAddressResponse extends Address {
+  id: string;
+  isDefault: boolean;
 }
